@@ -1,17 +1,29 @@
-from PyPDF2 import PdfReader
-# import chromadb
-# from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-# from langchain.vectorstores import Chroma
+import PyPDF2
+from typing import Sequence
+from langchain.prompts import (
+    PromptTemplate,
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate
+)
+from langchain.chains import create_tagging_chain
+from langchain_experimental.llms import ChatLlamaAPI
 
-# chroma_client = chromadb.Client()
-# collection = chroma_client.create_collection(name="my_collection")
+
+class Person(BaseModel):
+    person_name: str
+    person_skills: [str]
+    person_experiences: Optional[str]
+    person_education: str
+
+class People(BaseModel):
+    people: Sequence[Person]
+    
 
 # encode this so it comes from an api req, db, or something else later
 pdf_file_path = './src/resume.pdf'
 
 def extract_text_from_pdf():
-    reader = PdfReader(pdf_file_path)
+    reader = PyPDF2.PdfReader(pdf_file_path)
 
     page = reader.pages[0]
 
@@ -19,28 +31,21 @@ def extract_text_from_pdf():
     return text
 
 # load the document and split it into chunks
-
 raw_text = extract_text_from_pdf()
+print(raw_text)
 
-text_splitter = CharacterTextSplitter(        
-    separator = "\n",
-    chunk_size = 30,
-    chunk_overlap  = 4, #striding over the text
-    length_function = len,
-)
-texts = text_splitter.split_text(raw_text)
+query = raw_text
 
+model = ChatLlamaAPI(client=llama)
 
+schema = {
+    "properties": {
+        "sentiment": {"type": "string", 'description': 'the sentiment encountered in the passage'},
+        "aggressiveness": {"type": "integer", 'description': 'a 0-10 score of how aggressive the passage is'},
+        "language": {"type": "string", 'description': 'the language of the passage'},
+    }
+}
 
+chain = create_tagging_chain(schema, model)
 
-# # split it into chunks
-# text_splitter = TokenTextSplitter(chunk_size=12, chunk_overlap=0)
-# splited_text = text_splitter.split_text(text)
-
-# # create the open-source embedding function
-# embedding_function = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
-
-# # load it into Chroma
-# db = Chroma.from_documents(splited_text, embedding_function)
-
-# # print(db)
+chain.run("give me your money")
