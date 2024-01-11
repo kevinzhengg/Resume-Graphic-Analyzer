@@ -1,21 +1,33 @@
+import os
+from dotenv import load_dotenv
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import HuggingFaceInstructEmbeddings
+from langchain.embeddings import HuggingFaceInstructEmbeddings, huggingface
 from langchain.vectorstores import FAISS, VectorStore
 from langchain.memory import ConversationBufferMemory
 from langchain.chains import ConversationalRetrievalChain
-from langchain.chat_models import AzureChatOpenAI, ChatCohere, ChatOpenAI
+from langchain.llms import huggingface_hub
+# from langchain_community.chat_models.huggingface import ChatHuggingFace
+
+load_dotenv()
+huggingface_token = os.getenv("HUGGING_FACE_AUTH_TOKEN")
+
 
 def get_pdf_text(pdf_docs):
     text = ""
+    images = []
     for pdf in pdf_docs:
         pdf_reader = PdfReader(pdf)
-        for page  in pdf_reader.pages:
+        for page in pdf_reader.pages:
             text += page.extract_text()
+        for page in pdf_reader.pages:
+            for image in page.images:
+                images.append(image.data)
 
-    return text
+    return (text, images)
+      
 
-l = get_pdf_text(["./src/resume.pdf"])
+(l, _) = get_pdf_text(["./src/resume.pdf"])
 
 
 def get_text_chunks(text):
@@ -43,7 +55,12 @@ def create_embeddings(text_chunks):
 
 
 def get_conversation_chain(vectorstore: VectorStore):
-    llm = AzureChatOpenAI()
+    llm = huggingface_hub.HuggingFaceHub(
+            repo_id='mistralai/Mistral-7B-v0.1',
+            task='text-generation',
+            huggingfacehub_api_token=huggingface_token,
+            client='wtfidk'
+            )
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(
             llm=llm,
@@ -54,7 +71,10 @@ def get_conversation_chain(vectorstore: VectorStore):
     return conversation_chain
 
 
-q = input("ask a q")
-chain = get_conversation_chain(create_embeddings(w))
-resp = chain({'question': q})
-print(resp)
+
+q = input("ask a q: ")
+while q != "end":
+    chain = get_conversation_chain(create_embeddings(w))
+    resp = chain({'question': q})
+    print(resp)
+    q = input("ask a q: ") 
