@@ -8,7 +8,6 @@ import Upload from './components/Upload.vue';
     <h2 class="text-secondary-700 italic">Your one stop resume fixer-upper</h2>
     <Upload />
   </div>
-<<<<<<< HEAD
   <div class="absolute top-[50vh] left-[5vw] -z-20">jjajaj</div>
 </template>
 
