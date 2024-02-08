@@ -1,7 +1,17 @@
-import { defineConfig } from 'vite'
+import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import wasm from "vite-plugin-wasm"
+import topLevelAwait from "vite-plugin-top-level-await"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+        plugins: [
+                vue(),
+                wasm(),
+                topLevelAwait()],
+        server: {
+                fs: {
+                        allow: [searchForWorkspaceRoot(process.cwd()), , "../backend/graph/pkg"]
+                }
+        }
 })

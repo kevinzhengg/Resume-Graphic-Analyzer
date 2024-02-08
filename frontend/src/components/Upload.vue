@@ -22,6 +22,9 @@
 </template>
 
 <script>
+        import init, { test_create, greet } from "graph"
+        await init()
+        test_create("jeaj");
         export default {
                 data() {
                         return {
