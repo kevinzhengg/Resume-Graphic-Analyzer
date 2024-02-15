@@ -21,14 +21,8 @@ pub fn test_create(name: &str) {
                     node!("aa";attr!("color","green")),
                     subgraph!("v";node!("aa"; attr!("shape","square"))));
 
-
-    let dot_output = g.print(&mut PrinterContext::default());
-
-    log(&dot_output);
-
-    let graph_svg = exec(g, &mut PrinterContext::default(), vec![Format::Svg.into()]).unwrap();
-    let b = String::from_utf8(graph_svg.clone()).unwrap();
-    log(&b);
+    // let dot_output = g.print(&mut PrinterContext::default());
+    // log(&dot_output);
 }
 
 
