@@ -1,6 +1,6 @@
 <template>
         <form action="http://localhost:5000/api/upload" method="post" enctype="multipart/form-data">
-                <input class="hidden" type="file" name="file-upload" id="upload" multiple>
+                <input class="hidden" type="file" name="file-upload" id="upload" multiple @change="handleChange">
                 <label for="upload">
                         <div class="grid place-items-center hover:bg-secondary-700 rounded-lg cursor-pointer mt-8 pt-2 pb-4">
                                 <svg class="fill-gray-900" width="60px" height="60px" viewBox="0 0 24 24"

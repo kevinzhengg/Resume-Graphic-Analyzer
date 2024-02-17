@@ -68,10 +68,10 @@ def create_embeddings(text_chunks):
 def get_conversation_chain(vectorstore: VectorStore):
     llm = huggingface_hub.HuggingFaceHub(
             repo_id='mistralai/Mistral-7B-v0.1',
-            task='summarization',
+            task='text-generation',
             huggingfacehub_api_token=os.getenv("HUGGING_FACE_AUTH_TOKEN"),
             client='eeoo',
-            # model_kwargs={'temperature': '0.2'},
+            model_kwargs={'temperature': '0.2',  'max-size': 512},
             )
     memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
     conversation_chain = ConversationalRetrievalChain.from_llm(

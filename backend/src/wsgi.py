@@ -8,6 +8,7 @@ import os
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
 # app.config['UPLOAD_FOLDER'] = '/home/vincent/Documents/hack-the-north-project/uploads';
+# maybe use s3 bucket here later idk if im planning to keep them in storage
 
 @app.route("/api/upload", methods=['POST'])
 def receive_upload():
@@ -24,4 +25,4 @@ def receive_upload():
 
     resp = chain({'question': 'What are some of the key skills this person has? Please output the skills in the format of a comma seperated list'})
 
-    return redirect(url_for('download_file', name=filename))
+    return resp
