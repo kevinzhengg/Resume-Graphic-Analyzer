@@ -1,0 +1,1 @@
+kubeadm join 10.0.0.18:6443 --token ielw6l.ie1a9b6i8fwqx2f7 	--discovery-token-ca-cert-hash sha256:c95e7be4ab76ea47f9eb5dbda78298d4bb10749c422f4a16af13e2943713226a

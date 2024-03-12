@@ -15,6 +15,7 @@ def receive_upload():
     f = request.files['file-upload']
     filename = f.filename;
     # path = os.path.join(app.config['UPLOAD_FOLDER'], filename);
+    print("yahoo")
     stream = BytesIO(f.read());
 
     (text, imgs) = train.get_pdf_bytes(stream)

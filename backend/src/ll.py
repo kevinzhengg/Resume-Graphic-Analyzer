@@ -59,7 +59,7 @@ class Net(nn.Module):
                 nn.Linear(50, 10),
                 )
 
-        # train/connect them in forward function
+    # train/connect them in forward function
     def forward(self, x):
         x = self.convs(x)
         x = x.view(x.size(0), -1) # flattening, result will be (64, 1568)
